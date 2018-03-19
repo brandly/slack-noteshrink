@@ -28,14 +28,14 @@ def index():
     elif body['type'] == 'event_callback':
         event = body['event']
         if event['type'] == 'file_shared':
-            return file_shared(event)
-        # TODO: subscribe to file comments so you can
-        # comment "shrink" under existing file
+            return handle_file_id(event['file_id'])
+        elif event['type'] == 'file_comment_added':
+            return handle_file_id(event['file_id'], event['comment']['comment'])
 
 # TODO: properly respond so we don't get retried requests
 # API wants a 200 within 3 seconds
-def file_shared(event):
-    response = get_file_info(event['file_id'])
+def handle_file_id(file_id, cmd=''):
+    response = get_file_info(file_id)
 
     if response['ok']:
         file = response['file']
@@ -43,7 +43,7 @@ def file_shared(event):
         if file['filetype'] not in ['jpg', 'jpeg', 'png']:
             return
 
-        title = file['title'].lower()
+        title = file['title'].lower() + cmd
         if 'whiteboard' not in title and 'shrink' not in title:
             return
 
