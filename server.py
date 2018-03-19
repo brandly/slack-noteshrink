@@ -108,4 +108,4 @@ def get_file_info(file_id):
     return r.json()
 
 
-run(host='localhost', port=os.getenv('PORT', 4390))
+run(host='0.0.0.0', port=int(os.getenv('PORT', 4390)))
