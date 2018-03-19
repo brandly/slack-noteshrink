@@ -86,7 +86,7 @@ def handle_img_file(file):
         print('shrunk', shrunken_file)
         return 'success'
     else:
-        print('failed', r, r.text)
+        print('failed', r)
 
 
 def upload_file(filename, channels):
