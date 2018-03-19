@@ -1,7 +1,7 @@
 # slack-noteshrink
 > A slackbot that shrinks your notes
 
-you'll need a few environment variables. these values given to you upon [creating a new slack app](https://api.slack.com/apps?new_app=1).
+you'll need a few environment variables. these values are given to you upon [creating a new slack app](https://api.slack.com/apps?new_app=1).
 
 ```
 CLIENT_ID=

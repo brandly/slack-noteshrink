@@ -37,25 +37,36 @@ def file_shared(event):
     response = get_file_info(event['file_id'])
 
     if response['ok']:
-        # TODO: only take certain filetypes
-        # TODO: look for "whiteboard" or "shrink" in the file name
         file = response['file']
 
-        headers = { 'Authorization': 'Bearer ' + OAUTH_TOKEN }
-        r = requests.get(file['url_private'], headers=headers, stream=True)
+        if file['filetype'] not in ['jpg', 'jpeg', 'png']:
+            return
 
-        if r.status_code == 200:
-            path = './tmp/' + file['id'] + file['filetype']
-            with open(path, 'wb') as f:
-                r.raw.decode_content = True
-                shutil.copyfileobj(r.raw, f)
-            shrunken_file = shrink_files([path], file['id'])
+        title = file['title'].lower()
+        if 'whiteboard' not in title and 'shrink' not in title:
+            return
 
-            print('done', shrunken_file)
-            # TODO: upload to slack
-            return 'success'
-        else:
-            print('oh no', r)
+        return handle_img_file(file)
+
+
+def handle_img_file(file):
+    headers = { 'Authorization': 'Bearer ' + OAUTH_TOKEN }
+    r = requests.get(file['url_private'], headers=headers, stream=True)
+
+    if r.status_code != 200:
+        print('oh no', r)
+        return
+
+    path = './tmp/' + file['id'] + file['filetype']
+    with open(path, 'wb') as f:
+        r.raw.decode_content = True
+        shutil.copyfileobj(r.raw, f)
+    shrunken_file = shrink_files([path], file['id'])
+
+    print('done', shrunken_file)
+    # TODO: upload to slack
+    return 'success'
+
 
 def get_file_info(file_id):
     r = requests.post('https://slack.com/api/files.info', data={
@@ -64,4 +75,5 @@ def get_file_info(file_id):
         })
     return r.json()
 
-run(host='localhost', port=4390)
+
+run(host='localhost', port=os.getenv('PORT', 4390))
