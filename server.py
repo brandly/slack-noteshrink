@@ -19,6 +19,10 @@ def shrink_files(files, basename):
         if file.startswith(basename):
             return file
 
+@route('/ping')
+def ping():
+    return 'pong'
+
 @post('/action')
 def index():
     body = json.load(request.body)
