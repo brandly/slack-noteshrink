@@ -98,7 +98,7 @@ def upload_file(filename, channels):
         data={
             'token': OAUTH_TOKEN,
             'title': 'shrunk-' + filename,
-            'channels': ''.join(channels)
+            'channels': ','.join(channels)
         }
     ).json()
 
