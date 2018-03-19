@@ -33,6 +33,7 @@ def index():
         # comment "shrink" under existing file
 
 # TODO: properly respond so we don't get retried requests
+# API wants a 200 within 3 seconds
 def file_shared(event):
     response = get_file_info(event['file_id'])
 
@@ -50,6 +51,8 @@ def file_shared(event):
 
 
 def handle_img_file(file):
+    print('handling', file['name'])
+
     headers = { 'Authorization': 'Bearer ' + OAUTH_TOKEN }
     r = requests.get(file['url_private'], headers=headers, stream=True)
 
@@ -61,12 +64,30 @@ def handle_img_file(file):
     with open(path, 'wb') as f:
         r.raw.decode_content = True
         shutil.copyfileobj(r.raw, f)
+
     shrunken_file = shrink_files([path], file['id'])
+    channels = file['channels'] + [file['user']]
 
-    print('done', shrunken_file)
-    # TODO: upload to slack
-    return 'success'
+    print('uploading', shrunken_file, 'to', channels)
+    r = upload_file(shrunken_file, channels)
 
+    if r['ok']:
+        print('shrunk', shrunken_file)
+        return 'success'
+
+
+def upload_file(filename, channels):
+    return requests.post(
+        'https://slack.com/api/files.upload',
+        files={
+            'file': open(filename, 'rb'),
+        },
+        data={
+            'token': OAUTH_TOKEN,
+            'title': 'shrunk-' + filename,
+            'channels': ''.join(channels)
+        }
+    ).json()
 
 def get_file_info(file_id):
     r = requests.post('https://slack.com/api/files.info', data={
