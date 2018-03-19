@@ -15,6 +15,8 @@ $ pip install git+git://github.com/mzucker/noteshrink.git@master
 $ python server.py
 ```
 
+this bot needs `files:read` and `files:write:user` permissions and to be subscribed to `file_comment_added` and `file_shared` events.
+
 slack has [some solid tutorials](https://api.slack.com/tutorials)
 
 props to [noteshrink](https://github.com/mzucker/noteshrink)
