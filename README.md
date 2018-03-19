@@ -11,7 +11,6 @@ OAUTH_TOKEN=
 
 ```
 $ pip install -r requirements.txt
-$ pip install git+git://github.com/mzucker/noteshrink.git@master
 $ python server.py
 ```
 
