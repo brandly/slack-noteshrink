@@ -17,4 +17,4 @@ $ python server.py
 
 slack has [some solid tutorials](https://api.slack.com/tutorials)
 
-props to (noteshrink)[https://github.com/mzucker/noteshrink]
+props to [noteshrink](https://github.com/mzucker/noteshrink)
