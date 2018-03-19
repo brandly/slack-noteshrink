@@ -38,14 +38,7 @@ def index():
 
 # TODO: properly respond so we don't get retried requests
 # API wants a 200 within 3 seconds
-handled_files = []
 def handle_file_id(file_id, cmd=''):
-    if file_id in handled_files:
-        # this is a hack because i'm unsure how to respond quickly before
-        # shrinking and uploading the image.
-        return 'already taken care of'
-
-    handled_files.append(file_id)
     response = get_file_info(file_id)
 
     if response['ok']:
@@ -61,7 +54,14 @@ def handle_file_id(file_id, cmd=''):
         return handle_img_file(file)
 
 
+handled_files = []
 def handle_img_file(file):
+    if file['id'] in handled_files:
+        # this is a hack because i'm unsure how to respond quickly before
+        # shrinking and uploading the image.
+        return 'already taken care of'
+
+    handled_files.append(file['id'])
     print('handling', file['name'])
 
     headers = { 'Authorization': 'Bearer ' + OAUTH_TOKEN }
