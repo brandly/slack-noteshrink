@@ -47,7 +47,7 @@ def handle_file_id(file_id, cmd=''):
         if file['filetype'] not in ['jpg', 'jpeg', 'png']:
             return 'not an image'
 
-        title = file['title'].lower() + cmd
+        title = file['title'].lower() + cmd.lower()
         if 'whiteboard' not in title and 'shrink' not in title:
             return 'no shrink needed'
 
